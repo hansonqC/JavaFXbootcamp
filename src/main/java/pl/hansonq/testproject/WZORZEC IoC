@@ -1,0 +1,2 @@
+Inversion of control - automatycznie wstrzykuje sie zaleznosc.
+Więcej robi za nas framework. powiazane jest z nim wzorzec dependency injection.
