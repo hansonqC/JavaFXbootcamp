@@ -15,7 +15,7 @@ public class UserDaoImpl implements UserDao {
     private MysqlConnector connector = MysqlConnector.getInstance();
     public boolean login(String name, String password) {
         try {
-            PreparedStatement preparedStatement = connector.getConnection().prepareStatement("SELECT * FROM user WHERE user =?");
+            PreparedStatement preparedStatement = connector.getConnection().prepareStatement("SELECT * FROM user WHERE username =?");
             preparedStatement.setString(1,name);
             ResultSet resulSet = preparedStatement.executeQuery();
             if(!resulSet.next()){  // na początku jest -1, sprawdzamy, jezeli jest 0 tzn że jest taki uzytkownik, jezeli -1, zwracamy false, tzn nie ma takiego użytkownika
@@ -34,7 +34,7 @@ public class UserDaoImpl implements UserDao {
 
     public boolean register(String name, String password) {
         try {
-            PreparedStatement preparedStatement = connector.getConnection().prepareStatement("SELECT * FROM user WHERE user =?");
+            PreparedStatement preparedStatement = connector.getConnection().prepareStatement("SELECT * FROM user WHERE username =?");
             preparedStatement.setString(1,name);
             ResultSet resulSet = preparedStatement.executeQuery();
             if(resulSet.next()){  // na początku jest -1, sprawdzamy, jezeli jest 0 tzn że jest taki uzytkownik, jezeli -1, zwracamy false, tzn nie ma takiego użytkownika
@@ -57,17 +57,12 @@ public class UserDaoImpl implements UserDao {
 
     public void removeUser(int id) {
         try {
-            PreparedStatement preparedStatement = connector.getConnection().prepareStatement("SELECT * FROM user WHERE id =?");
-            preparedStatement.setInt(1,id);
-            ResultSet resulSet = preparedStatement.executeQuery();
-            if(!resulSet.next()){  // na początku jest -1, sprawdzamy, jezeli jest 0 tzn że jest taki uzytkownik, jezeli -1, zwracamy false, tzn nie ma takiego użytkownika
-                System.out.println("nie ma takiego użytkownika");
-            }
+
             PreparedStatement preparedStatementDelete = connector.getConnection().prepareStatement("DELETE FROM user WHERE id=?");
-            preparedStatementDelete.setInt(1,0);
+            preparedStatementDelete.setInt(1,id);
            preparedStatementDelete.execute();
 
-            preparedStatement.close();
+
             preparedStatementDelete.close();
 
 

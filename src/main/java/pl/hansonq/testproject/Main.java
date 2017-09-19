@@ -11,17 +11,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("mainView.fxml"));  // getClassLoader - przeszukuje wszystkie foldery w obrebie projektu
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("loginView.fxml"));  // getClassLoader - przeszukuje wszystkie foldery w obrebie projektu
 
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 600, 400));
+        primaryStage.setTitle("AkademiaKodu");
+        primaryStage.setScene(new Scene(root, 350, 220));
         primaryStage.setResizable(false);
-        primaryStage.setAlwaysOnTop(true);
-        primaryStage.initStyle(StageStyle.DECORATED
-
-
-
-        );
+        primaryStage.setAlwaysOnTop(false);
+        primaryStage.initStyle(StageStyle.UTILITY);
         primaryStage.show();
     }
 
