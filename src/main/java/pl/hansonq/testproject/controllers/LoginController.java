@@ -44,7 +44,7 @@ private UserDao userdao = new UserDaoImpl();
         }
         return  true;
     }
-
+// zrób rejestracje
     private void tryLogin() {
         String login = textLogin.getText();
         String password = textPassword.getText();
