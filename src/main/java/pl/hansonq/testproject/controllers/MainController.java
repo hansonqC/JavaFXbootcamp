@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import pl.hansonq.testproject.models.MysqlConnector;
 
 import java.awt.event.ActionEvent;
 import java.beans.EventHandler;
@@ -12,23 +13,12 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
-    @FXML
-Button buttonHello;
+//Dorobić widok  logowania login/hasło i odpowiedznia tabela
+    // Podglą kontaktów w mainview
 
 
-    @Override
     public void initialize(URL location, ResourceBundle resources) {   // wykonuje sie po załadaowaniu programu
-  buttonHello.setText("Zmieniłem nazwe hehhe");
-/*  buttonHello.setOnMouseClicked(e -> say());//new javafx.event.EventHandler<MouseEvent>() {
-      @Override
-      public void handle(MouseEvent event) {
-          System.out.println("Witaj świecie");
-      }
-  });*/
+        MysqlConnector.getInstance();
+    }
 
-    }
-    public void onButtonHelloClick(MouseEvent event){
-        if(event.isAltDown()){
-        System.out.println("hello Klikniecie: "+event.getClickCount());
-    }
-}}
+}
