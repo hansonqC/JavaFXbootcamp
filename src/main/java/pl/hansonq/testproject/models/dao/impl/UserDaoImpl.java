@@ -21,7 +21,7 @@ public class UserDaoImpl implements UserDao {
             if(!resulSet.next()){  // na początku jest -1, sprawdzamy, jezeli jest 0 tzn że jest taki uzytkownik, jezeli -1, zwracamy false, tzn nie ma takiego użytkownika
                 return  false;
             }
-            preparedStatement.close();
+
             return resulSet.getString("password").equals(password);  // hasło poprawne
 
 

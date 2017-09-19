@@ -32,9 +32,25 @@ private UserDao userdao = new UserDaoImpl();
         buttonLogin.setOnMouseClicked(e -> tryLogin());
     }
 
+    private boolean checkLoginData(){
+        String login = textLogin.getText();
+        String password = textPassword.getText();
+
+        if(login.isEmpty()|| password.isEmpty()){
+            Utils.createSimpleDialog("Logowanie","","Pola nie mogą być puste !");
+        }
+        if(login.length()<=3 || password.length() <=5){
+            Utils.createSimpleDialog("Logowanie","","Dane za krótkie !");
+        }
+        return  true;
+    }
+
     private void tryLogin() {
         String login = textLogin.getText();
         String password = textPassword.getText();
+        if(!checkLoginData()){
+            return;
+        }
         if(userdao.login(login,password)){
             userSession.setUsername(login);
             userSession.setLogedIn(true);
