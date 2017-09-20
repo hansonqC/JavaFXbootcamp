@@ -30,6 +30,22 @@ private UserSession userSession = UserSession.getInstance();
 private UserDao userdao = new UserDaoImpl();
     public void initialize(URL location, ResourceBundle resources) {
         buttonLogin.setOnMouseClicked(e -> tryLogin());
+        buttonRegister.setOnMouseClicked(e ->tryRegister());
+    }
+
+    private void tryRegister() {
+        String loginR = textLoginR.getText();
+        String passwordR =textPasswordR.getText();
+
+        if(!checkRegisterData()){
+                    return;
+        }
+        if(userdao.register(loginR,passwordR)){
+            Utils.createSimpleDialog("Rejestracja", "","Zarejestrowałeś się poprawnie");
+        }else{
+            Utils.createSimpleDialog("Rejestracja", "","Podany login już istnieje");
+        }
+
     }
 
     private boolean checkLoginData(){
@@ -59,5 +75,23 @@ private UserDao userdao = new UserDaoImpl();
             Utils.createSimpleDialog("Logowanie","","Podano niepoprawne dane !");
         }
 
+    }
+    private boolean checkRegisterData(){
+        String loginR = textLoginR.getText();
+        String passwordR =textPasswordR.getText();
+        String passwordRepeatR = textPasswordRepeatR.getText();
+        if(loginR.isEmpty()|| passwordR.isEmpty()||passwordRepeatR.isEmpty()){
+            Utils.createSimpleDialog("Rejestracja","","Pola nie mogą być puste !");
+            return false;
+        }
+        if(loginR.length()<=3 || passwordR.length() <=5){
+            Utils.createSimpleDialog("Rejestracja","","Dane są za krótkie !");
+            return false;
+        }
+        if(!passwordR.equals(passwordRepeatR)){
+            Utils.createSimpleDialog("Rejestracja","","Hasła nie sa identyczne !");
+            return false;
+        }
+        return  true;
     }
 }
