@@ -22,7 +22,7 @@ public class UserDaoImpl implements UserDao {
             if(!resulSet.next()){  // na początku jest -1, sprawdzamy, jezeli jest 0 tzn że jest taki uzytkownik, jezeli -1, zwracamy false, tzn nie ma takiego użytkownika
                 return  false;
             }
-            System.out.println(resulSet.getString("password"));
+
             return resulSet.getString("password").equals(Utils.shaHash(password));  // hasło poprawne
 
 
@@ -48,7 +48,7 @@ public class UserDaoImpl implements UserDao {
             preparedStatementInsert.execute();
             preparedStatement.close();
             preparedStatementInsert.close();
-            System.out.println(Utils.shaHash(password));
+
 
             return true;
         } catch (SQLException e) {

@@ -1,17 +1,23 @@
 package pl.hansonq.testproject.controllers;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import pl.hansonq.testproject.models.UserSession;
 import pl.hansonq.testproject.models.Utils;
 import pl.hansonq.testproject.models.dao.UserDao;
 import pl.hansonq.testproject.models.dao.impl.UserDaoImpl;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -44,6 +50,8 @@ private UserDao userdao = new UserDaoImpl();
             Utils.createSimpleDialog("Rejestracja", "","Zarejestrowałeś się poprawnie");
         }else{
             Utils.createSimpleDialog("Rejestracja", "","Podany login już istnieje");
+            textLoginR.clear();
+            textPasswordR.clear();
         }
 
     }
@@ -57,11 +65,13 @@ private UserDao userdao = new UserDaoImpl();
         }
         if(login.length()<=3 || password.length() <=5){
             Utils.createSimpleDialog("Logowanie","","Dane za krótkie !");
+            textLogin.clear();
+            textPassword.clear();
         }
         return  true;
     }
 // zrób rejestracje
-    private void tryLogin() {
+    private void tryLogin()  {
         String login = textLogin.getText();
         String password = textPassword.getText();
         if(!checkLoginData()){
@@ -70,7 +80,24 @@ private UserDao userdao = new UserDaoImpl();
         if(userdao.login(login,password)){
             userSession.setUsername(login);
             userSession.setLogedIn(true);
-            Utils.createSimpleDialog("Logowanie","","Zalogowano poprawnie !");
+
+            try {
+                Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("mainView.fxml"));      // getClassLoader - przeszukuje wszystkie foldery w obrebie projektu
+
+
+                Stage stageRoot = (Stage)buttonLogin.getScene().getWindow();
+                stageRoot.close();
+          //  stageRoot.setScene(new Scene(root, 600,400));
+                Stage stage = new Stage();
+                Scene scene=new Scene(root,600,400);
+                stage.initStyle(StageStyle.DECORATED);
+                stage.setTitle("Ksiązka telefoniczna");
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }else{
             Utils.createSimpleDialog("Logowanie","","Podano niepoprawne dane !");
         }
