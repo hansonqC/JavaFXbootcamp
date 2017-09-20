@@ -27,10 +27,12 @@ public class Main extends Application {
     private void closing() {
 
             int result= JOptionPane.YES_OPTION;
-            if(JOptionPane.showConfirmDialog(null, "Czy napewno chcesz wyjść z programu ?",null, JOptionPane.YES_NO_OPTION,0, null)==result){
+            if(JOptionPane.showConfirmDialog(null, "Czy napewno chcesz wyjść z programu ?",null, JOptionPane.YES_NO_OPTION,0, null)==result) {
                 System.exit(0);
-            };
-        
+            }else{
+                return;
+            }
+
     }
 
 
