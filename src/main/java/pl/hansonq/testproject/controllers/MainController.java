@@ -9,18 +9,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import pl.hansonq.testproject.models.MysqlConnector;
 import pl.hansonq.testproject.models.UserSession;
+import pl.hansonq.testproject.models.Utils;
 import pl.hansonq.testproject.models.dao.ContactDao;
 import pl.hansonq.testproject.models.dao.impl.ContactDaoImpl;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.beans.EventHandler;
 import java.io.IOException;
@@ -33,12 +32,12 @@ public class MainController implements Initializable {
     //Dorobić widok  logowania login/hasło i odpowiedznia tabela
     // Podglą kontaktów w mainview
     @FXML
-    TextField textNumber, textName;
+    TextField textNumber, textName, textContactName, textContactNumber;
 
     @FXML
-    Button buttonLogout;
+    Button buttonLogout,buttonDelete,buttonAdd;
     @FXML
-    ListView listContacts;
+    ListView<String> listContacts;
     @FXML
     Label labelLoged;
     private ObservableList contactItems;
@@ -53,21 +52,41 @@ public class MainController implements Initializable {
 
         loadContacts();
 
-        listContacts.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                textName.setText(newValue);
-                textNumber.setText(contactDao.getNumber(newValue));
-            }
+        listContacts.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            textName.setText(newValue);
+            textNumber.setText(contactDao.getNumber(newValue));
         });
 
 
         buttonLogout.setOnMouseClicked(e -> logout());
         updateActions();
 
+        buttonAdd.setOnMouseClicked( e-> addContact());
+
+    buttonDelete.setOnMouseClicked(e -> deleteContact());
+
+
 
         // wykonuje sie po załadaowaniu programu
 
+    }
+
+    private void addContact() {
+        contactDao.addContact(textContactName.getText(), textContactNumber.getText());
+        Utils.createSimpleDialog("Dodawanie","","Dodano nowy kontakt");
+        textContactName.clear();
+        textContactNumber.clear();
+        loadContacts();
+
+    }
+
+    private void deleteContact() {
+        Alert alert = new Alert(Alert.AlertType.ERROR,"Czy napewno chcesz usunąć wskazanego uzytkownika ?",ButtonType.OK,ButtonType.NO);
+        if(alert.getResult()==ButtonType.OK){
+            contactDao.removeContact(listContacts.getSelectionModel().getSelectedItem());
+            Utils.createSimpleDialog("Usuwanie","","Poprawnie usunąłes kontakt");
+            loadContacts();
+        }
     }
 
     private void updateActions() {
@@ -80,7 +99,7 @@ public class MainController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (!newValue) {
-                    contactDao.editContact(textName.getText(), textNumber.getText(), listContacts.getSelectionModel().getSelectedItems());
+                    contactDao.editContact(textName.getText(), textNumber.getText(), listContacts.getSelectionModel().getSelectedItem());
                     loadContacts();
                     textName.setEditable(false);
                 }
@@ -96,7 +115,7 @@ public class MainController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (!newValue) {
-                    contactDao.editContact(textName.getText(), textNumber.getText(), listContacts.getSelectionModel().getSelectedItems());
+                    contactDao.editContact(textName.getText(), textNumber.getText(), listContacts.getSelectionModel().getSelectedItem());
                     loadContacts();
                     textNumber.setEditable(false);
                 }
