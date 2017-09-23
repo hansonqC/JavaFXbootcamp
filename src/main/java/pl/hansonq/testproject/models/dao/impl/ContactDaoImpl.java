@@ -1,5 +1,6 @@
 package pl.hansonq.testproject.models.dao.impl;
 
+import javafx.collections.ObservableList;
 import pl.hansonq.testproject.models.MysqlConnector;
 import pl.hansonq.testproject.models.UserSession;
 import pl.hansonq.testproject.models.dao.ContactDao;
@@ -13,23 +14,24 @@ import java.util.List;
 /**
  * Created by lukasz on 2017-09-20.
  */
-public class ContactDaoImpl implements ContactDao{
+public class ContactDaoImpl implements ContactDao {
 
     private MysqlConnector connector = MysqlConnector.getInstance();
     private UserSession userSession = UserSession.getInstance();
+
     @Override
     public List<String> getAllContactsName(String username) {
         List<String> nameList = new ArrayList<>();
         try {
             PreparedStatement preparedStatement = connector.getConnection().prepareStatement(
-                    "SELECT user FROM contact INNER JOIN user ON user.id = contact.user WHERE user.username = ?"
+                    "SELECT name FROM contact INNER JOIN user ON user.id = contact.user WHERE user.username = ?"
             );
 
-            preparedStatement.setString(1,username);
+            preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
-            System.out.println(resultSet.getString("user"));
-            while(resultSet.next()){
-                nameList.add(resultSet.getString("user"));
+
+            while (resultSet.next()) {
+                nameList.add(resultSet.getString("name"));
             }
             preparedStatement.close();
 
@@ -44,13 +46,14 @@ public class ContactDaoImpl implements ContactDao{
     public String getNumber(String contact) {
         try {
             PreparedStatement preparedStatement = connector.getConnection().prepareStatement(
-                    "SELECT number FROM contact WHERE username = ?"
+                    "SELECT number FROM contact WHERE name = ?"
             );
 
             preparedStatement.setString(1, contact);
             ResultSet resultSet = preparedStatement.executeQuery();
-
-            return resultSet.getString("number");
+            while (resultSet.next()) {
+                return resultSet.getString("number");
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -59,59 +62,59 @@ public class ContactDaoImpl implements ContactDao{
     }
 
 
-
     @Override
-    public boolean addContact(String name, String number){
+    public boolean addContact(String name, String number) {
         try {
-        PreparedStatement preparedStatement = connector.getConnection().prepareStatement(
-        "INSERT INTO contact VALUES(?,?,?,?)"
-        );
+            PreparedStatement preparedStatement = connector.getConnection().prepareStatement(
+                    "INSERT INTO contact VALUES(?,?,?,?)"
+            );
 
-        preparedStatement.setInt(1,0);
-        preparedStatement.setString(2, name);
-        preparedStatement.setString(3, number);
-        preparedStatement.setInt(4, userSession.getId());
+            preparedStatement.setInt(1, 0);
+            preparedStatement.setString(2, name);
+            preparedStatement.setString(3, number);
+            preparedStatement.setInt(4, userSession.getId());
 
-        preparedStatement.execute();
-        preparedStatement.close();
+            preparedStatement.execute();
+            preparedStatement.close();
         } catch (SQLException e) {
-        e.printStackTrace();
+            e.printStackTrace();
         }
         return false;
-        }
+    }
 
-@Override
+    @Override
     public void removeContact(String name) {
         try {
-        PreparedStatement preparedStatement = connector.getConnection().prepareStatement(
-        "DELETE FROM contact WHERE username = ?"
-        );
-        preparedStatement.execute();
-        preparedStatement.close();
+            PreparedStatement preparedStatement = connector.getConnection().prepareStatement(
+                    "DELETE FROM contact WHERE name = ?"
+            );
+            preparedStatement.execute();
+            preparedStatement.close();
 
         } catch (SQLException e) {
-        e.printStackTrace();
+            e.printStackTrace();
         }
     }
+
 
     @Override
-    public boolean editContact(String name, String number) {
+    public boolean editContact(String newName, String number, ObservableList list) {
         try {
-        PreparedStatement preparedStatement = connector.getConnection().prepareStatement(
-        "UPDATE contact SET number = ? AND username = WHERE name = ?"
-        );
+            PreparedStatement preparedStatement = connector.getConnection().prepareStatement(
+                    "UPDATE contact SET number = ? WHERE name = ?"
+            );
 
-        preparedStatement.setString(1, number);
-        preparedStatement.setString(2, name);
+            preparedStatement.setString(1, number);
+            preparedStatement.setString(2, newName);
 
-        preparedStatement.execute();
-        preparedStatement.close();
+            preparedStatement.execute();
+            preparedStatement.close();
 
-        return true;
+            return true;
         } catch (SQLException e) {
-        e.printStackTrace();
+            e.printStackTrace();
         }
         return false;
-        }
     }
+}
 

@@ -45,6 +45,7 @@ public class MainController implements Initializable {
 
     private UserSession session = UserSession.getInstance();
     private ContactDao contactDao = new ContactDaoImpl();
+
     public void initialize(URL location, ResourceBundle resources) {
 
         textName.setEditable(false);
@@ -61,23 +62,49 @@ public class MainController implements Initializable {
         });
 
 
-
-
-        buttonLogout.setOnMouseClicked(e ->logout());
-
-
-        textName.setOnMouseClicked( e->{
-            if(e.getClickCount()>=2){
-                textName.setEditable(true);
-            }
-        });
+        buttonLogout.setOnMouseClicked(e -> logout());
+        updateActions();
 
 
         // wykonuje sie po załadaowaniu programu
-        //   MysqlConnector.getInstance();
-        //   labelLoged.setTextFill(Paint.valueOf("red"));
-        //  labelLoged.setText("Zalogowany :"+userSession.getUsername());
+
     }
+
+    private void updateActions() {
+        textName.setOnMouseClicked(e -> {
+            if (e.getClickCount() >= 2) {
+                textName.setEditable(true);
+            }
+        });
+        textName.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (!newValue) {
+                    contactDao.editContact(textName.getText(), textNumber.getText(), listContacts.getSelectionModel().getSelectedItems());
+                    loadContacts();
+                    textName.setEditable(false);
+                }
+            }
+        });
+        textNumber.setOnMouseClicked(e -> {
+            if (e.getClickCount() >= 2) {
+                textNumber.setEditable(true);
+            }
+        });
+
+        textNumber.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (!newValue) {
+                    contactDao.editContact(textName.getText(), textNumber.getText(), listContacts.getSelectionModel().getSelectedItems());
+                    loadContacts();
+                    textNumber.setEditable(false);
+                }
+            }
+        });
+
+    }
+
 
     private void logout() {
         session.setLogedIn(false);
@@ -86,17 +113,17 @@ public class MainController implements Initializable {
 
         Stage stage = (Stage) buttonLogout.getScene().getWindow();
         try {
-            Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("loginView.fxml")) ;
+            Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("loginView.fxml"));
             Scene scene = new Scene(root);
 
             stage.setScene(scene);
-          //  stage.show();
+            //  stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void loadContacts(){
+    private void loadContacts() {
         contactItems = FXCollections.observableArrayList(contactDao.getAllContactsName(session.getUsername()));
         listContacts.setItems(contactItems);
 
