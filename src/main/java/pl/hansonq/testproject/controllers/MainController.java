@@ -81,12 +81,13 @@ public class MainController implements Initializable {
     }
 
     private void deleteContact() {
-        Alert alert = new Alert(Alert.AlertType.ERROR,"Czy napewno chcesz usunąć wskazanego uzytkownika ?",ButtonType.OK,ButtonType.NO);
-        if(alert.getResult()==ButtonType.OK){
+       // Alert alert = new Alert(Alert.AlertType.ERROR,"Czy napewno chcesz usunąć wskazanego uzytkownika ?",ButtonType.OK);
+       // alert.show();
+        //if(alert.getResult()==ButtonType.OK){
             contactDao.removeContact(listContacts.getSelectionModel().getSelectedItem());
             Utils.createSimpleDialog("Usuwanie","","Poprawnie usunąłes kontakt");
             loadContacts();
-        }
+      //  }
     }
 
     private void updateActions() {

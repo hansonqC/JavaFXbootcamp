@@ -102,7 +102,7 @@ public class ContactDaoImpl implements ContactDao {
     public boolean editContact(String newName, String number, String oldName) {
         try {
             PreparedStatement preparedStatement = connector.getConnection().prepareStatement(
-                    "UPDATE contact SET number = ? , name = ?WHERE name = ?"
+                    "UPDATE contact SET number = ? , name = ? WHERE name = ?"
             );
 
             preparedStatement.setString(1, number);
