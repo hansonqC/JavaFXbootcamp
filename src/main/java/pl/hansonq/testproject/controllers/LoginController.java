@@ -5,10 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import pl.hansonq.testproject.models.UserSession;
@@ -32,6 +30,7 @@ PasswordField textPassword,textPasswordR,textPasswordRepeatR;
     @FXML
 Button buttonLogin,buttonRegister;
 
+
 private UserSession userSession = UserSession.getInstance();
 private UserDao userdao = new UserDaoImpl();
     public void initialize(URL location, ResourceBundle resources) {
@@ -46,6 +45,7 @@ private UserDao userdao = new UserDaoImpl();
         if(!checkRegisterData()){
                     return;
         }
+
         if(userdao.register(loginR,passwordR)){
             Utils.createSimpleDialog("Rejestracja", "","Zarejestrowałeś się poprawnie");
         }else{
@@ -93,6 +93,7 @@ private UserDao userdao = new UserDaoImpl();
                 stage.initStyle(StageStyle.DECORATED);
                 stage.setTitle("Ksiązka telefoniczna");
                 stage.setScene(scene);
+//
                 stage.show();
             } catch (IOException e) {
                 e.printStackTrace();

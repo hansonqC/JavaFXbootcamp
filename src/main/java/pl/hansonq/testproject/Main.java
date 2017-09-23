@@ -21,7 +21,7 @@ public class Main extends Application {
         primaryStage.setAlwaysOnTop(false);
         primaryStage.initStyle(StageStyle.UTILITY);
         primaryStage.show();
-        primaryStage.setOnCloseRequest(e->closing());
+ //       primaryStage.setOnCloseRequest(e->closing());
     }
 
     private void closing() {

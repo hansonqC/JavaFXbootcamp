@@ -1,6 +1,7 @@
 package pl.hansonq.testproject.models.dao.impl;
 
 import pl.hansonq.testproject.models.MysqlConnector;
+import pl.hansonq.testproject.models.UserSession;
 import pl.hansonq.testproject.models.Utils;
 import pl.hansonq.testproject.models.dao.UserDao;
 
@@ -14,6 +15,7 @@ import java.sql.SQLException;
 public class UserDaoImpl implements UserDao {
 
     private MysqlConnector connector = MysqlConnector.getInstance();
+    private UserSession session = UserSession.getInstance();
     public boolean login(String name, String password) {
         try {
             PreparedStatement preparedStatement = connector.getConnection().prepareStatement("SELECT * FROM user WHERE username =?");
@@ -22,7 +24,7 @@ public class UserDaoImpl implements UserDao {
             if(!resulSet.next()){  // na początku jest -1, sprawdzamy, jezeli jest 0 tzn że jest taki uzytkownik, jezeli -1, zwracamy false, tzn nie ma takiego użytkownika
                 return  false;
             }
-
+            session.setId(resulSet.getInt("id"));
             return resulSet.getString("password").equals(Utils.shaHash(password));  // hasło poprawne
 
 
